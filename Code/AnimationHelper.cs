@@ -50,20 +50,26 @@ public static class AnimationHelper {
         whenDone();
     }
 
-    public static IEnumerator Animate(float duration, Action<float> lerpFunction, AnimationCurve curve = null) {
+    public static IEnumerator Animate(float duration, Action<float> lerpFunction, AnimationCurve curve = null, 
+        float tInitialValue = 0, int tDirection = 1) {
         if (curve == null) {
             curve = AnimationCurve.Linear(0, 0, 1, 1);
         }
         
-        float t = 0;
-        while (t < 1) {
-            t += Time.deltaTime / duration;
+        float t = tInitialValue;
+        while (t >= 0 && t <= 1) {
+            t += (Time.deltaTime / duration)*tDirection;
            
             lerpFunction(curve.Evaluate(Mathf.Clamp01(t)));
 
             yield return null;
         }
 
-        lerpFunction(curve.Evaluate(Mathf.Clamp01(1)));
+        if (t < 0) {
+            lerpFunction(curve.Evaluate(Mathf.Clamp01(0)));
+        }
+        else {
+            lerpFunction(curve.Evaluate(Mathf.Clamp01(1)));
+        }
     }
 }
