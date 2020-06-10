@@ -1,12 +1,27 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public static class AnimationHelper {
     public static IEnumerator AnimateLocalPosition(float duration, Transform transform, Vector3 startPos,
         Vector3 endPos, AnimationCurve curve = null) {
         var moveVector = endPos - startPos;
         yield return Animate(duration, (t) => { transform.localPosition = startPos + t * moveVector; }, curve);
+    }
+
+    public static IEnumerator AnimateGlobalPosition(float duration, Transform transform, Vector3 startPos,
+        Vector3 endPos, AnimationCurve curve = null) {
+        var moveVector = endPos - startPos;
+        yield return Animate(duration, (t) => { transform.position = startPos + t * moveVector; }, curve);
+    }
+
+    public static IEnumerator AnimateAnchoredPosition(float duration, RectTransform transform, Vector2 startPos,
+        Vector2 endPos, AnimationCurve curve = null) {
+        var moveVector = endPos - startPos;
+        yield return Animate(duration, (t) => { transform.anchoredPosition = startPos + t * moveVector; }, curve);
     }
 
     public static IEnumerator AnimateLocalScale(float duration, Transform transform, Vector3 startScale,
@@ -20,7 +35,13 @@ public static class AnimationHelper {
         var angleVector = endAngle - startAngle;
         yield return Animate(duration, (t) => { transform.localEulerAngles = startAngle + t * angleVector; }, curve);
     }
-    
+
+    public static IEnumerator AnimateGlobalEulerAngles(float duration, Transform transform, Vector3 startAngle,
+        Vector3 endAngle, AnimationCurve curve = null) {
+        var angleVector = endAngle - startAngle;
+        yield return Animate(duration, (t) => { transform.eulerAngles = startAngle + t * angleVector; }, curve);
+    }
+
     public static IEnumerator AnimateLocalRotation(float duration, Transform transform, Quaternion startRotation,
         Quaternion endRotation, AnimationCurve curve = null) {
         yield return Animate(duration, (t) => { transform.localRotation = Quaternion.Lerp(startRotation, endRotation, t); }, curve);
@@ -36,6 +57,21 @@ public static class AnimationHelper {
             transform.localPosition = startPos + p;
         }, curve);
         yield return AnimateLocalPosition(0.05f, transform, transform.localPosition,startPos);
+    }
+
+    public static IEnumerator AnimateMaterialColor(float duration, Material material, string propertyName, Color startColor,
+        Color endColor, AnimationCurve curve = null) {
+        yield return Animate(duration, (t) => { material.SetColor(propertyName, Color.Lerp(startColor, endColor, t)); }, curve);
+    }
+
+    public static IEnumerator AnimateImageColor(float duration, Image image, Color startColor,
+        Color endColor, AnimationCurve curve = null) {
+        yield return Animate(duration, (t) => { image.color = Color.Lerp(startColor, endColor, t); }, curve);
+    }
+
+    public static IEnumerator AnimateTextColor(float duration, TextMeshProUGUI text, Color startColor,
+        Color endColor, AnimationCurve curve = null) {
+        yield return Animate(duration, (t) => { text.color = Color.Lerp(startColor, endColor, t); }, curve);
     }
 
     public static IEnumerator AnimateParallel(MonoBehaviour monoBehaviour, params IEnumerator[] enumerators) {
