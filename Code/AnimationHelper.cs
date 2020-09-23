@@ -47,6 +47,11 @@ public static class AnimationHelper {
         yield return Animate(duration, (t) => { transform.localRotation = Quaternion.Lerp(startRotation, endRotation, t); }, curve);
     }
     
+    public static IEnumerator AnimateGlobalRotation(float duration, Transform transform, Quaternion startRotation,
+        Quaternion endRotation, AnimationCurve curve = null) {
+        yield return Animate(duration, (t) => { transform.rotation = Quaternion.Lerp(startRotation, endRotation, t); }, curve);
+    }
+    
     public static IEnumerator ShakeLocalPosition(float duration, Transform transform, Vector3 startPos, AnimationCurve curve = null,
         float amount = 0.2f, float tremor = 15, float phase = 0) {
         
